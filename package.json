@@ -1,0 +1,30 @@
+{
+  "name": "17admin-panel",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "open": "vite --open",
+    "documate:upload": "documate upload"
+  },
+  "dependencies": {
+    "@documate/documate": "^0.2.1",
+    "@documate/vue": "^0.3.1",
+    "ant-design-vue": "4.x",
+    "axios": "^1.6.2",
+    "element-plus": "^2.4.2",
+    "init": "^0.1.2",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.0",
+    "prettier": "3.1.0",
+    "vite": "^4.4.11"
+  },
+  "main": "index.js",
+  "license": "MIT"
+}
