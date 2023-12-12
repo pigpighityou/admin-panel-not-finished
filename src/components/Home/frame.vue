@@ -37,10 +37,20 @@
         >
         </el-avatar>
       </a-layout-header>
+      <a-breadcrumb
+        :style="{
+          margin: '20px 35px',
+        }"
+      >
+        <a-breadcrumb-item>Home</a-breadcrumb-item>
+        <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
+        <a-breadcrumb-item><a href="">Application List</a></a-breadcrumb-item>
+        <a-breadcrumb-item>An Application</a-breadcrumb-item>
+      </a-breadcrumb>
       <a-layout-content
         :style="{
-          margin: '6vw 2vw',
-          padding: '3vw',
+          margin: '0px 30px',
+          padding: '20px',
           background: '#fff',
           minHeight: '100vw',
         }"
@@ -72,9 +82,18 @@ const collapsed = ref(false);
 const state = reactive({
   collapsed: false,
   selectedKeys: ["1"],
-  openKeys: ["sub1"],
-  preOpenKeys: ["sub1"],
+  openKeys: [],
+  preOpenKeys: [],
 });
+
+watch(
+  () => state.openKeys,
+  (newVal, oldVal) => {
+    state.preOpenKeys = oldVal;
+    console.log(event.target.innerText);
+  }
+);
+
 const items = reactive([
   {
     key: "1",
@@ -122,6 +141,34 @@ const items = reactive([
       },
     ],
   },
+  {
+    key: "sub2",
+    icon: () => h(MailOutlined),
+    label: "Navigation Two",
+    title: "Navigation Two",
+    children: [
+      {
+        key: "9",
+        label: "Option 9",
+        title: "Option 9",
+      },
+      {
+        key: "10",
+        label: "Option 10",
+        title: "Option 10",
+      },
+      {
+        key: "11",
+        label: "Option 11",
+        title: "Option 11",
+      },
+      {
+        key: "12",
+        label: "Option 12",
+        title: "Option 12",
+      },
+    ],
+  },
 ]);
 
 const itemLabel = ref(items[0].label);
@@ -129,38 +176,18 @@ const itemLabel = ref(items[0].label);
 watch(
   () => state.selectedKeys,
   (newVal, oldVal) => {
-    // 打印key的值
-    /*  console.log("selectedKeys", newVal[0], oldVal[0]); */
-    // 打印key所包含的文字(items为菜单的数据源)
-    /*    console.log(
-      "selectedKeys-value:",
-      items.find((item) => {
-        if (isNaN(item.key)) {
-          console.log(
-            "real-value:",
-            item.children.find((item) => item.key === newVal[0]).label
-          );
-          return item.children.find((item) => item.key === newVal[0]);
-        } else {
-          return item.key === newVal[0];
-        }
-      }).label
-    ); */
-
-    const itemlabelArr = items.find((item) => {
-      // key是数字吗（是数字就没有子菜单）
-      if (isNaN(item.key)) {
-        itemLabel.value = item.children.find(
-          (item) => item.key === newVal[0]
-        ).label;
-      } else {
-        return item.key === newVal[0];
+    items.forEach((item) => {
+      if (item.key === newVal[0]) {
+        itemLabel.value = item.label;
+      } else if (item.children) {
+        /* 这里的item.children是传自身值用的 */
+        item.children.forEach((child) => {
+          if (child.key === newVal[0]) {
+            itemLabel.value = child.label;
+          }
+        });
       }
     });
-    // 如果没有子菜单，这边是有值的
-    if (itemlabelArr) {
-      itemLabel.value = itemlabelArr.label;
-    }
   }
 );
 </script>

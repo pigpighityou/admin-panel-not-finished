@@ -1,8 +1,18 @@
 <template>
-    <div>123</div>
-  </template>
-  
-  <script setup></script>
-  
-  <style scoped></style>
-  
+
+{{ store.state.test }}
+
+
+
+
+
+
+
+
+</template>
+
+<script setup>
+import store from "@/store/store.js";
+</script>
+
+<style scoped></style>
