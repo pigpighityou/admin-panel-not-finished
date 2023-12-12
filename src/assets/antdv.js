@@ -1,11 +1,17 @@
 import { 
     DatePicker,
-    Button
+    Button,
+    Space,
+    Layout,
+
  } from "ant-design-vue";
 
 let modules = [
     DatePicker,
-    Button
+    Button,
+    Space,
+    Layout,
+
 ];
 
 export function getAntDvModules(x) {
