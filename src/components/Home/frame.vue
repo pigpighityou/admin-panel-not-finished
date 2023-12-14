@@ -21,6 +21,7 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
+        <!-- 菜单折叠的图标 -->
         <menu-unfold-outlined
           v-if="collapsed"
           class="trigger"
@@ -31,23 +32,73 @@
           class="trigger"
           @click="() => (collapsed = !collapsed)"
         />
-        {{ itemLabel }}
-        <el-avatar
-          class="avatar"
-          src="https://s2.loli.net/2022/02/21/wRltb4a2cXoPhCk.jpg"
-        >
-        </el-avatar>
+
+        <!-- 标签 -->
+
+        <a-breadcrumb
+        :style="{
+          margin: '5px 35px',
+          color: 'black',
+          display:'inline-block'
+        }"
+      >
+        <a-breadcrumb-item>{{ store.state.itemMainTitle }}</a-breadcrumb-item>
+        <a-breadcrumb-item v-if="store.state.hasChild === true">{{
+          store.state.itemSubTitle
+        }}</a-breadcrumb-item>
+      </a-breadcrumb>
+     
+     
+        
+
+        <!-- 头部右侧的下拉菜单操作 -->
+        <a-dropdown class="avatar">
+          <a class="ant-dropdown-link" @click.prevent>
+            <el-avatar
+              class="avatar"
+              @click="avatarHandler"
+              src="https://s2.loli.net/2022/02/21/wRltb4a2cXoPhCk.jpg"
+            >
+            </el-avatar>
+          </a>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item key="0">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="http://www.alipay.com/"
+                >
+                  1st menu item
+                </a>
+              </a-menu-item>
+              <a-menu-item key="1">
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="http://www.taobao.com/"
+                >
+                  2nd menu item
+                </a>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="3">3rd menu item（disabled）</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
       </a-layout-header>
       <a-breadcrumb
         :style="{
           margin: '20px 35px',
-          color:'black'
+          color: 'black',
         }"
       >
-        <a-breadcrumb-item>{{store.state.itemMainTitle}}</a-breadcrumb-item>
-        <a-breadcrumb-item v-if="store.state.hasChild===true">{{store.state.itemSubTitle}}</a-breadcrumb-item>
-       
-   
+      <!-- {{ itemLabel }}
+        <a-breadcrumb-item>{{ store.state.itemMainTitle }}</a-breadcrumb-item>
+        <a-breadcrumb-item v-if="store.state.hasChild === true">{{
+          store.state.itemSubTitle
+        }}</a-breadcrumb-item> -->
+        <TabList></TabList>
       </a-breadcrumb>
       <a-layout-content
         :style="{
@@ -58,8 +109,7 @@
         }"
       >
         <!-- frame里的body在此 -->
-        <router-view ></router-view>
-       
+        <router-view></router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -67,8 +117,9 @@
 
 <script setup>
 import Body from "@/components/Home/body.vue";
-import { ref, watchEffect, watch, reactive, h,nextTick } from "vue";
-import store from '@/store/store.js'
+import TabList from "@/components/Other/tabList.vue";
+import { ref, watchEffect, watch, reactive, h, nextTick } from "vue";
+import store from "@/store/store.js";
 import { useRoute, useRouter } from "vue-router";
 import {
   UserOutlined,
@@ -110,7 +161,6 @@ const items = reactive([
     icon: () => h(DesktopOutlined),
     label: "用户管理",
     title: "用户管理",
-  
   },
   {
     key: "2",
@@ -196,40 +246,40 @@ watch(
   }
 );
 
-
-
+// 点击菜单后执行的路由操作
 const clickHandler = (item) => {
   /*  router.push(event.key); */
   //dom更新完后再执行，否则会在异步执行前获得老值，造成新值变老值的情况
-  nextTick(()=>{
+  nextTick(() => {
     console.log(item.item.title);
-   
-    store.state.itemMainTitle=item.item.title
-   
-    if(item.keyPath.length>1){
-      store.state.hasChild=true
-     /*  console.log(item.keyPath); */
-      store.state.itemMainTitle=item.keyPath[0]
-      store.state.itemSubTitle=item.item.title
-     /*  console.log('有子元素'); */
-     
-    }else{
-      store.state.hasChild=false
-     /*  console.log('没有子元素'); */
-    }
-  
-    // 如果点击的是首页，就不执行跳转
-    if(item.item.title!='用户管理'){
-  //  需要去掉item.item.title里的空格
-     let routerName=item.item.title.replace(' ','-')
-      router.push(`/${routerName}`)
 
-    }else{
-      router.push(`/`)
+    store.state.itemMainTitle = item.item.title;
+
+    if (item.keyPath.length > 1) {
+      store.state.hasChild = true;
+      /*  console.log(item.keyPath); */
+      store.state.itemMainTitle = item.keyPath[0];
+      store.state.itemSubTitle = item.item.title;
+      /*  console.log('有子元素'); */
+    } else {
+      store.state.hasChild = false;
+      /*  console.log('没有子元素'); */
     }
-   
-  })
- 
+
+    // 如果点击的是首页，就不执行跳转
+    if (item.item.title != "用户管理") {
+      //  需要去掉item.item.title里的空格
+      let routerName = item.item.title.replace(" ", "-");
+      router.push(`/${routerName}`);
+    } else {
+      router.push(`/`);
+    }
+  });
+};
+
+// 点击头像后执行的操作
+const avatarHandler = () => {
+  console.log(123);
 };
 </script>
 
@@ -272,7 +322,8 @@ const clickHandler = (item) => {
 
 .avatar {
   float: right;
+  cursor: pointer;
   margin-right: 10px;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 </style>
