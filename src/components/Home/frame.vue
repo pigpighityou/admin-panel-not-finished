@@ -36,20 +36,17 @@
         <!-- 标签 -->
 
         <a-breadcrumb
-        :style="{
-          margin: '5px 35px',
-          color: 'black',
-          display:'inline-block'
-        }"
-      >
-        <a-breadcrumb-item>{{ store.state.itemMainTitle }}</a-breadcrumb-item>
-        <a-breadcrumb-item v-if="store.state.hasChild === true">{{
-          store.state.itemSubTitle
-        }}</a-breadcrumb-item>
-      </a-breadcrumb>
-     
-     
-        
+          :style="{
+            margin: '5px 35px',
+            color: 'black',
+            display: 'inline-block',
+          }"
+        >
+          <a-breadcrumb-item>{{ store.state.itemMainTitle }}</a-breadcrumb-item>
+          <a-breadcrumb-item v-if="store.state.hasChild === true">{{
+            store.state.itemSubTitle
+          }}</a-breadcrumb-item>
+        </a-breadcrumb>
 
         <!-- 头部右侧的下拉菜单操作 -->
         <a-dropdown class="avatar">
@@ -93,11 +90,6 @@
           color: 'black',
         }"
       >
-      <!-- {{ itemLabel }}
-        <a-breadcrumb-item>{{ store.state.itemMainTitle }}</a-breadcrumb-item>
-        <a-breadcrumb-item v-if="store.state.hasChild === true">{{
-          store.state.itemSubTitle
-        }}</a-breadcrumb-item> -->
         <TabList></TabList>
       </a-breadcrumb>
       <a-layout-content
@@ -227,18 +219,48 @@ const items = reactive([
 // 初始化itemLabel的值
 const itemLabel = ref(items[0].label);
 
-// 监听selectedKeys的变化，改变itemLabel的值
+// 监听tagname的变化，改变selectedKeys的值
+watch(
+  () => store.state.tagName,
+  (newVal, oldVal) => {
+   /*  console.log("tagname:", newVal); */
+    items.forEach((item) => {
+      if (item.label === newVal) {
+        state.selectedKeys = [item.key];
+      } else if (item.children) {
+        /* 这里的item.children是传自身值用的 */
+        item.children.forEach((child) => {
+          if (child.label === newVal) {
+            state.selectedKeys = [child.key];
+          }
+        });
+      } else if (newVal === "home") {
+        state.selectedKeys = ["1"];
+      }
+    });
+  }
+);
+
+// 监听selectedKeys的变化，改变itemMainTitle和itemSubTitle的值,
+// 还需改变hasChild的值
 watch(
   () => state.selectedKeys,
   (newVal, oldVal) => {
     items.forEach((item) => {
       if (item.key === newVal[0]) {
-        itemLabel.value = item.label;
+        store.state.itemMainTitle = item.title;
+        store.state.itemSubTitle = item.title;
+        if (item.children) {
+          store.state.hasChild = true;
+        } else {
+          store.state.hasChild = false;
+        }
       } else if (item.children) {
-        /* 这里的item.children是传自身值用的 */
         item.children.forEach((child) => {
           if (child.key === newVal[0]) {
-            itemLabel.value = child.label;
+            store.state.itemMainTitle = item.title;
+            store.state.itemSubTitle = child.title;
+            store.state.hasChild = true;
           }
         });
       }
@@ -246,13 +268,16 @@ watch(
   }
 );
 
+
 // 点击菜单后执行的路由操作
 const clickHandler = (item) => {
   /*  router.push(event.key); */
   //dom更新完后再执行，否则会在异步执行前获得老值，造成新值变老值的情况
   nextTick(() => {
+    store.state.item = item;
     console.log(item.item.title);
-
+    /*  console.log(item); */
+    store.state.itemTitle = item.item.title;
     store.state.itemMainTitle = item.item.title;
 
     if (item.keyPath.length > 1) {

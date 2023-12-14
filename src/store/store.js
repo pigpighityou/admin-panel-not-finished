@@ -15,6 +15,24 @@ const store=createStore({
             hasChild:false,   /* 初始值 */
             itemMainTitle:'用户管理', /* 初始值 */
             itemSubTitle:'用户管理', /* 初始值 */
+            itemTitle:'用户管理', /* 初始值 */
+            item:'', 
+
+
+
+
+            /* 
+            *        tag相关数据配置
+            * */
+            tags:[
+                {
+                  path: "/",
+                  name: "home",
+                  label: "首页",
+                },
+               
+              ],
+            tagName:'',
 
         }
     },
