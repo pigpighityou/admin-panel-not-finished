@@ -6,6 +6,7 @@
     closable
     :type="tag.type"
     @click="clickHandler(tag.name)"
+    @close="closeHandler(tag.name)"
     
     :style="{
         cursor:'pointer'
@@ -18,21 +19,21 @@
 </template>
 
 <script setup>
-import { ref,watch} from "vue";
+import { ref,watch,watchEffect} from "vue";
 import store from "@/store/store.js";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
+const emits=defineEmits(['delTag'])
 
 
-/* const tags = ref([
-  {
-    path: "/",
-    name: "home",
-    label: "首页",
-  },
- 
-]); */
+
+// 把emit封装成一个函数
+const closeHandler=(value)=>{
+    emits('delTag',value)
+  
+    
+};
 
 
 
@@ -62,13 +63,15 @@ watch(
 );
 
 
-
+// 点击按钮,跳转至对应的路由
 const clickHandler=(value)=>{
       store.state.tagName=value
     const newValue=value.replace(" ", "-");
     console.log('tagname：',newValue,store.state.tagName)  
      router.push(`/${newValue}`); 
 }
+
+
 
 
 

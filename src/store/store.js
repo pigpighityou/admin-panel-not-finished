@@ -33,6 +33,7 @@ const store=createStore({
                
               ],
             tagName:'',
+            delTagName:'',
 
         }
     },

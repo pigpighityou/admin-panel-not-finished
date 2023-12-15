@@ -90,7 +90,7 @@
           color: 'black',
         }"
       >
-        <TabList></TabList>
+        <TabList @delTag="delTager"></TabList>
       </a-breadcrumb>
       <a-layout-content
         :style="{
@@ -223,7 +223,7 @@ const itemLabel = ref(items[0].label);
 watch(
   () => store.state.tagName,
   (newVal, oldVal) => {
-   /*  console.log("tagname:", newVal); */
+    /*  console.log("tagname:", newVal); */
     items.forEach((item) => {
       if (item.label === newVal) {
         state.selectedKeys = [item.key];
@@ -268,6 +268,51 @@ watch(
   }
 );
 
+watch(
+  () => store.state.tagName,
+  (newVal, oldVal) => {
+    console.log("tagname:", newVal);
+  }
+);
+
+// 关闭标签(home标签不能关闭)
+const delTager = (value) => {
+  console.log("deltaggg", value);
+  // 如果关闭的是home标签，就不执行
+  if (value === "home") {
+    return;
+  }
+  // 获取delTagName的值
+  store.state.delTagName = value;
+  // 删除当前标签，回到上一个标签
+  store.state.tags.forEach((tag, index) => {
+    if (tag.name === value) {
+      store.state.tags.splice(index, 1);
+      router.push(`${store.state.tags[index - 1].path}`);
+      // 监听delTagName的变化，执行改变selectedKeys的值操作（key）为上一个标签的key
+      // 改变了selectedKeys的值，就会触发上面watch监听selectedKeys的变化，执行改变itemMainTitle和itemSubTitle的值操作
+      // 首先得获取上一个标签，然后再将selectedKeys改成上一个标签对应的key
+      watch(route, (newVal, oldVal) => {
+        const trimNewLabel = newVal.name.replace("-", " ");
+        /*  console.log('thisisnewlabel',trimNewLabel,store.state.tags); */
+        // 找到了下一个标签的值了，下一步应该改变selectedKeys的值
+        items.forEach((item) => {
+          if (item.label === trimNewLabel) {
+            state.selectedKeys = [item.key];
+          } else if (item.children) {
+            item.children.forEach((child) => {
+              if (child.label === trimNewLabel) {
+                state.selectedKeys = [child.key];
+              }
+            });
+          } else if (trimNewLabel === "home") {
+            state.selectedKeys = ["1"];
+          }
+        });
+      });
+    }
+  });
+};
 
 // 点击菜单后执行的路由操作
 const clickHandler = (item) => {
