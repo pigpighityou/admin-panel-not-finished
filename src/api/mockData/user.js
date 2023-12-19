@@ -93,7 +93,7 @@ export default {
     const { id } = param2Obj(config.url);
     if (!id) {
       return {
-        code: -999,
+        code: 400,
         message: "参数不正确",
       };
     } else {

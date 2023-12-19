@@ -33,5 +33,14 @@ export default{
             data:params,
             mock:false,
         })
+    },
+    addUser(params){
+        return request({
+            url:'/user/add',
+            method:'post',
+            data:params,
+            mock:false,
+        })
     }
+
 }

@@ -9,3 +9,7 @@ Mock.mock('/home/getData',homeApi.getHomeData)
 // 本地获取user数据
 
 Mock.mock(/user\/getUser/,'get',userApi.getUserList)
+
+// 本地添加user数据
+
+Mock.mock(/user\/add/,'post',userApi.createUser)
