@@ -1,9 +1,9 @@
 <template>
-    <div>
-        
-    </div>
+   <UserManage></UserManage>
 </template>
 
-<script setup></script>
+<script setup>
+import UserManage from '@/components/Page/userManage.vue'
+</script>
 
 <style scoped></style>

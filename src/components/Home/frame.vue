@@ -49,40 +49,8 @@
         </a-breadcrumb>
 
         <!-- 头部右侧的下拉菜单操作 -->
-        <a-dropdown class="avatar">
-          <a class="ant-dropdown-link" @click.prevent>
-            <el-avatar
-              class="avatar"
-              @click="avatarHandler"
-              src="https://s2.loli.net/2022/02/21/wRltb4a2cXoPhCk.jpg"
-            >
-            </el-avatar>
-          </a>
-          <template #overlay>
-            <a-menu>
-              <a-menu-item key="0">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="http://www.alipay.com/"
-                >
-                  1st menu item
-                </a>
-              </a-menu-item>
-              <a-menu-item key="1">
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="http://www.taobao.com/"
-                >
-                  2nd menu item
-                </a>
-              </a-menu-item>
-              <a-menu-divider />
-              <a-menu-item key="3">3rd menu item（disabled）</a-menu-item>
-            </a-menu>
-          </template>
-        </a-dropdown>
+        <Dropdown></Dropdown>
+
       </a-layout-header>
       <a-breadcrumb
         :style="{
@@ -102,6 +70,12 @@
       >
         <!-- frame里的body在此 -->
         <router-view></router-view>
+        <!-- frame里的基本界面里的基本信息 -->
+        <div v-if="route.name==='home'">
+          <Body></Body>
+        
+        </div>
+       
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -109,6 +83,7 @@
 
 <script setup>
 import Body from "@/components/Home/body.vue";
+import Dropdown from "@/components/Other/dropdown.vue";
 import TabList from "@/components/Other/tabList.vue";
 import { ref, watchEffect, watch, reactive, h, nextTick } from "vue";
 import store from "@/store/store.js";
@@ -195,23 +170,24 @@ const items = reactive([
     ],
   },
   {
-    key: "设置",
+    key: "Setting",
     icon: () => h(ToolFilled),
-    label: "设置",
-    title: "设置",
+    label: "Setting",
+    title: "Setting",
     children: [
       {
         key: "8",
-        label: "page1",
+        label: "商品管理",
         title: "page1",
       },
       {
         key: "9",
-        label: "page2",
+        label: "其他配置",
         title: "page2",
       },
     ],
   },
+
 ]);
 
 // 配置
@@ -248,8 +224,8 @@ watch(
   (newVal, oldVal) => {
     items.forEach((item) => {
       if (item.key === newVal[0]) {
-        store.state.itemMainTitle = item.title;
-        store.state.itemSubTitle = item.title;
+        store.state.itemMainTitle = item.label;
+        store.state.itemSubTitle = item.label;
         if (item.children) {
           store.state.hasChild = true;
         } else {
@@ -258,8 +234,8 @@ watch(
       } else if (item.children) {
         item.children.forEach((child) => {
           if (child.key === newVal[0]) {
-            store.state.itemMainTitle = item.title;
-            store.state.itemSubTitle = child.title;
+            store.state.itemMainTitle = item.label;
+            store.state.itemSubTitle = child.label;
             store.state.hasChild = true;
           }
         });
@@ -320,7 +296,7 @@ const clickHandler = (item) => {
   nextTick(() => {
     store.state.item = item;
     console.log(item.item.title);
-    /*  console.log(item); */
+     /*  console.log(item);  */
     store.state.itemTitle = item.item.title;
     store.state.itemMainTitle = item.item.title;
 
@@ -328,7 +304,7 @@ const clickHandler = (item) => {
       store.state.hasChild = true;
       /*  console.log(item.keyPath); */
       store.state.itemMainTitle = item.keyPath[0];
-      store.state.itemSubTitle = item.item.title;
+      store.state.itemSubTitle = item.item.originItemValue.label;
       /*  console.log('有子元素'); */
     } else {
       store.state.hasChild = false;
@@ -346,10 +322,7 @@ const clickHandler = (item) => {
   });
 };
 
-// 点击头像后执行的操作
-const avatarHandler = () => {
-  console.log(123);
-};
+
 </script>
 
 <style scoped>
@@ -389,10 +362,5 @@ const avatarHandler = () => {
   transform: scale(1.8);
 }
 
-.avatar {
-  float: right;
-  cursor: pointer;
-  margin-right: 10px;
-  margin-top: 6px;
-}
+
 </style>

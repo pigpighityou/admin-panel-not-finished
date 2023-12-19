@@ -12,6 +12,8 @@ const routes=[
         name:"home",
         components:{
           default:()=>import('@/pages/Home/home.vue'),
+         
+         
    
         },
         children:[
@@ -34,6 +36,21 @@ const routes=[
               default:()=>import('@/pages/Page/page2.vue'),
             }
           },
+          {
+            path:'/category',
+            name:"Category",
+            components:{
+              default:()=>import('@/Manager/category.vue'),
+            }
+          },
+          {
+            path:'/other',
+            name:"Other",
+            components:{
+              default:()=>import('@/Manager/other.vue'),
+            }
+          },
+        
 
           /* 
           *
