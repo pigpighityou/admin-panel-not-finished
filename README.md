@@ -5,7 +5,15 @@
 
 
 ### 运用知识
-- vue.js,mock.js,fastMock,element-plus,ant-design Vue ,axios,echarts，vuex,vue-router,prettier
+- vue.js
+- mock.js
+- fastMock
+- element-plus
+- ant-design Vue 
+- axios
+- echarts
+- vuex
+- vue-router,prettier
 
 
 
