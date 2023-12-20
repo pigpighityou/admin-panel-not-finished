@@ -13,7 +13,8 @@
 - axios
 - echarts
 - vuex
-- vue-router,prettier
+- vue-router
+- prettier
 
 
 
