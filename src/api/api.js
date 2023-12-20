@@ -58,5 +58,15 @@ export default{
             mock:false,
         })
     },
+    // 登录
+    getMenu(params){
+        return request({
+            url:'/permission/getMenu',
+            method:'post',
+            data:params,
+            mock:false,
+        })
+
+    }
 
 }

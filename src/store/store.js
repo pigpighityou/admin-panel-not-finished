@@ -1,4 +1,6 @@
 import { createStore } from "vuex";
+import Cookie from "js-cookie";
+import storageUtils from "@/utils/localStorage";
 
 const store = createStore({
   state() {
@@ -25,18 +27,49 @@ const store = createStore({
           label: "首页",
         },
       ],
+
       tagName: "",
       delTagName: "",
-      /* 
-      *
-      * */
+      /*
+       *     菜单相关数据配置
+       * */
 
+      // menu的数据持久化
+      menu: storageUtils.LocalStoreGetter("menu") || [],
 
-      
+      //  token
+      token: "",
     };
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    setMenu(state, val) {
+      state.menu = val;
+      storageUtils.LocalStoreSetter("menu", val);
+    },
+    cleanMenu(state) {
+      state.menu = [];
+      storageUtils.LocalStoreRemove("menu");
+    },
+
+    /*
+     *  token
+     */
+    setToken(state, val) {
+      state.token = val;
+      // 本地存储token
+      Cookie.set("token", val);
+    },
+    cleanToken(state) {
+      state.token = "";
+      // 清除本地存储token
+      Cookie.remove("token");
+    },
+    getToken(state) {
+      //  本地获取token
+      state.token = state.token || Cookie.get("token");
+    },
+  },
   actions: {},
 });
 

@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 import homeApi from './mockData/home'
 import userApi from './mockData/user'
-
+import permissionApi from './mockData/permit'
 
 // 拦截请求
 Mock.mock('/home/getData',homeApi.getHomeData)
@@ -21,3 +21,7 @@ Mock.mock(/user\/edit/,'post',userApi.updateUser)
 // 本地删除user数据
 
 Mock.mock(/user\/delete/,'get',userApi.deleteUser)
+
+// 本地获取菜单数据
+
+Mock.mock(/permission\/getMenu/,'post',permissionApi.getMenu)

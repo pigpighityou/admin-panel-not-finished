@@ -49,7 +49,7 @@
         </a-breadcrumb>
 
         <!-- 头部右侧的下拉菜单操作 -->
-        <Dropdown></Dropdown>
+        <Dropdown :state="state" ></Dropdown>
 
       </a-layout-header>
       <a-breadcrumb
@@ -85,7 +85,7 @@
 import Body from "@/components/Home/body.vue";
 import Dropdown from "@/components/Other/dropdown.vue";
 import TabList from "@/components/Other/tabList.vue";
-import { ref, watchEffect, watch, reactive, h, nextTick } from "vue";
+import { ref, watchEffect, watch, reactive, h, nextTick,onMounted } from "vue";
 import store from "@/store/store.js";
 import { useRoute, useRouter } from "vue-router";
 import {
@@ -122,8 +122,8 @@ watch(
 );
 
 // 配置菜单项
-const items = reactive([
-  {
+let items = reactive([
+/*   {
     key: "1",
     icon: () => h(DesktopOutlined),
     label: "用户管理",
@@ -186,9 +186,13 @@ const items = reactive([
         title: "page2",
       },
     ],
-  },
+  }, */
 
 ]);
+
+
+  items=store.state.menu
+
 
 // 配置
 
