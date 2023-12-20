@@ -41,6 +41,22 @@ export default{
             data:params,
             mock:false,
         })
-    }
+    },
+    editUser(params){
+        return request({
+            url:'/user/edit',
+            method:'post',
+            data:params,
+            mock:false,
+        })
+    },
+    deleteUser(params){
+        return request({
+            url:'/user/delete',
+            method:'get',
+            data:params,
+            mock:false,
+        })
+    },
 
 }

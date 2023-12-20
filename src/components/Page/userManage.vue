@@ -1,6 +1,6 @@
 <template>
   <div class="user-header">
-    <el-button type="primary" @click="dialogVisible = true">+新增</el-button>
+    <el-button type="primary" @click="handleAdd">+新增</el-button>
     <el-form :inline="true" :model="formInline">
       <el-form-item label="请输入">
         <el-input
@@ -26,9 +26,12 @@
       />
 
       <el-table-column fixed="right" label="Operations" width="180">
-        <template #default>
-          <el-button size="small">编辑</el-button>
-          <el-button type="danger" size="small">删除</el-button>
+        <!--   作用域插槽，可以拿到当前行的数据 -->
+        <template #default="slot">
+          <el-button size="small" @click="handleEdit(slot.row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(slot.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -44,7 +47,7 @@
 
   <el-dialog
     v-model="dialogVisible"
-    title="新增用户"
+    :title="action === 'add' ? '新增用户' : '编辑用户'"
     width="35%"
     :before-close="handleClose"
   >
@@ -143,8 +146,8 @@
 
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { ElMessageBox } from "element-plus";
-import { ref, reactive, onMounted, inject } from "vue";
+import { ElMessageBox,ElMessage } from "element-plus";
+import { ref, reactive, onMounted, inject, nextTick } from "vue";
 import dateFormat from "@/utils/dateFormat";
 
 const proxy = inject("$api");
@@ -260,14 +263,34 @@ const handleClose = (done) => {
 const onSubmit = () => {
   userform.value.validate(async (valid) => {
     if (valid) {
-      formUser.birth = dateFormat(formUser.birth);
-      let res = await proxy.addUser(formUser);
-      console.log(res);
-      if (res) {
-        dialogVisible.value = false;
-        userform.value.resetFields();
-        getUserData(config);
+      // 如果是添加用户
+      if (action.value === "add") {
+        formUser.birth = dateFormat(formUser.birth);
+        let res = await proxy.addUser(formUser);
+        console.log(res);
+        if (res) {
+          dialogVisible.value = false;
+          userform.value.resetFields();
+          getUserData(config);
+        }
+      } else {
+        // 如果是编辑用户
+        console.log(formUser);
+        formUser.sex === "男" ? (formUser.sex = 1) : (formUser.sex = 0);
+        let res = await proxy.editUser(formUser);
+        /*  console.log(res); */
+        if (res) {
+          dialogVisible.value = false;
+          userform.value.resetFields();
+          getUserData(config);
+        }
       }
+    } else {
+      ElMessageBox({
+        showClose: true,
+        message: "请输入正确的信息",
+        type: "error",
+      });
     }
   });
 };
@@ -276,6 +299,51 @@ const onSubmit = () => {
 const handleCancel = () => {
   dialogVisible.value = false;
   userform.value.resetFields();
+};
+
+// 编辑按钮功能
+const action = ref("add");
+const handleEdit = (row) => {
+  console.log(row);
+  action.value = "edit";
+  dialogVisible.value = true;
+  //   将row里面的数据浅拷贝到formUser里面
+  row.sex === 1 ? (row.sex = "男") : (row.sex = "女");
+  nextTick(() => {
+    Object.assign(formUser, row);
+  });
+};
+
+// 新增按钮功能
+const handleAdd = () => {
+  action.value = "add";
+  dialogVisible.value = true;
+};
+
+// 删除按钮功能
+const handleDelete = (row) => {
+  ElMessageBox.confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
+  })
+    .then(async () => {
+       await proxy.deleteUser ({id:row.id});
+       ElMessage({
+        showClose:true,
+        message:'删除成功!',
+        type:'success'
+       })
+         getUserData(config);
+    
+    })
+    .catch(() => {
+      ElMessageBox({
+        showClose: true,
+        message: "已取消删除",
+        type: "info",
+      });
+    });
 };
 </script>
 
