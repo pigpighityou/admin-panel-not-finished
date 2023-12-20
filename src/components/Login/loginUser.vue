@@ -43,6 +43,8 @@ const login = async () => {
   store.commit("setMenu", res.menu);
   // 设置token
   store.commit("setToken", res.token);
+  // 设置登录时间
+  store.commit('getTime')
   //   跳转
   router.push({
     name: "home",

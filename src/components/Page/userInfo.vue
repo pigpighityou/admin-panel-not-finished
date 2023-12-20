@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="login-info">
-          <p>上次登录时间:<span>2022-7-11</span></p>
+          <p>上次登录时间:<span> {{ getTime }}</span></p>
           <p>上次登录的地点:<span>北京</span></p>
         </div>
       </el-card>
@@ -62,9 +62,17 @@
 <script setup>
 import axios from "axios";
 import * as echarts from "echarts";
-import { reactive, ref, onMounted, inject, watch,nextTick } from "vue";
+import { reactive, ref, onMounted, inject, watch,nextTick,computed } from "vue";
+import storageUtils from "@/utils/localStorage";
+
+
+// 获取上次登录时间
+const getTime=computed(()=>{
+    return storageUtils.LocalStoreGetter("loginTime")
+})
 // 获取全局api
 const proxy = inject("$api");
+
 
 // 获取dom，来装表格
 const echart = ref(null);
@@ -104,7 +112,7 @@ const getCountData = async () => {
   let res = await proxy.getCountData();
 
   countData.value = res;
-  console.log(countData.value);
+ /*  console.log(countData.value); */
 };
 
 onMounted(() => {

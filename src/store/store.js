@@ -39,6 +39,8 @@ const store = createStore({
 
       //  token
       token: "",
+      //登录时的时刻
+      loginTime: "",
     };
   },
   getters: {},
@@ -69,8 +71,19 @@ const store = createStore({
       //  本地获取token
       state.token = state.token || Cookie.get("token");
     },
+
+    /* 
+    *     时间
+    * */
+    getTime(state) {
+      state.loginTime = new Date().toLocaleString();
+      console.log(state.loginTime);
+      storageUtils.LocalStoreSetter("loginTime", state.loginTime);
+    },
   },
   actions: {},
 });
+
+
 
 export default store;
