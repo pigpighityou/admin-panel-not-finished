@@ -227,7 +227,7 @@ onMounted(() => {
 
 const getUserData = async (config) => {
   let r = await proxy.getUserData(config);
-  console.log(r);
+/*   console.log(r); */
   config.total = r.count;
   list.value = r.list.map((item) => {
     // 往数据中添加一个sexLabel字段，然后返回新数据

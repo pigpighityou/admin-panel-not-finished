@@ -203,14 +203,14 @@ const itemLabel = ref(items[0].label);
 watch(
   () => store.state.tagName,
   (newVal, oldVal) => {
-    /*  console.log("tagname:", newVal); */
+  console.log("tagname变了:", newVal); 
     items.forEach((item) => {
-      if (item.label === newVal) {
+      if (item.title === newVal) {
         state.selectedKeys = [item.key];
       } else if (item.children) {
         /* 这里的item.children是传自身值用的 */
         item.children.forEach((child) => {
-          if (child.label === newVal) {
+          if (child.title === newVal) {
             state.selectedKeys = [child.key];
           }
         });
@@ -226,6 +226,7 @@ watch(
 watch(
   () => state.selectedKeys,
   (newVal, oldVal) => {
+  
     items.forEach((item) => {
       if (item.key === newVal[0]) {
         store.state.itemMainTitle = item.label;
@@ -257,7 +258,7 @@ watch(
 
 // 关闭标签
 const delTager = (value) => {
-  console.log("deltaggg", value);
+ /*  console.log("deltaggg", value); */
   // 如果关闭的是home标签，就不执行
   if (value === "home") {
     return;

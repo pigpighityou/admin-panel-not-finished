@@ -67,7 +67,8 @@ watch(
 const clickHandler=(value)=>{
       store.state.tagName=value
     const newValue=value.replace(" ", "-");
-    console.log('tagname：',newValue,store.state.tagName)  
+    /* console.log('tagname：',newValue,store.state.tagName)  
+    console.log('title',store.state.itemMainTitle,store.state.itemSubTitle); */
      router.push(`/${newValue}`); 
 }
 
