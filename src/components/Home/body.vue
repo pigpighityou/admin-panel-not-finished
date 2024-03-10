@@ -2,7 +2,7 @@
   <el-col :span="20" style="margin: 40px auto">
     <el-card shadow="hover">
       <div class="user">
-        <img src="../../assets/images/girl.jpeg" alt="" />
+        <img src="../../assets/images/tomjerry.png" alt="" />
         <div class="user-info">
           <p class="name">Admin</p>
           <p class="role">超级管理员</p>

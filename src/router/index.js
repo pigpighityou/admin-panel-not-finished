@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-
+import { nextTick } from "vue";
 
 const routes = [
   {
@@ -119,9 +119,12 @@ const router = createRouter({
 });
 
 // 奇怪现象：页面刷新，路由不变，这会导致问题，需要刷新页面后，页面回到首页
-/* window.addEventListener("load", () => {
-  router.push("/");
-}); */
+// 需要在dom加载完后再进行跳转，否则会出现路由改了，但是页面没改的现象
+window.addEventListener("load", () => {
+  nextTick(()=>{
+    router.push("/");
+  })
+}); 
 
 
 export default router;

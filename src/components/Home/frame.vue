@@ -49,8 +49,7 @@
         </a-breadcrumb>
 
         <!-- 头部右侧的下拉菜单操作 -->
-        <Dropdown :state="state" ></Dropdown>
-
+        <Dropdown :state="state"></Dropdown>
       </a-layout-header>
       <a-breadcrumb
         :style="{
@@ -71,11 +70,9 @@
         <!-- frame里的body在此 -->
         <router-view></router-view>
         <!-- frame里的基本界面里的基本信息 -->
-        <div v-if="route.name==='home'">
+        <div v-if="route.name === 'home'">
           <Body></Body>
-        
         </div>
-       
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -85,7 +82,7 @@
 import Body from "@/components/Home/body.vue";
 import Dropdown from "@/components/Other/dropdown.vue";
 import TabList from "@/components/Other/tabList.vue";
-import { ref, watchEffect, watch, reactive, h, nextTick,onMounted } from "vue";
+import { ref, watchEffect, watch, reactive, h, nextTick, onMounted } from "vue";
 import store from "@/store/store.js";
 import { useRoute, useRouter } from "vue-router";
 import {
@@ -122,77 +119,8 @@ watch(
 );
 
 // 配置菜单项
-let items = reactive([
-/*   {
-    key: "1",
-    icon: () => h(DesktopOutlined),
-    label: "用户管理",
-    title: "用户管理",
-  },
-  {
-    key: "2",
-    icon: () => h(PieChartOutlined),
-    label: "Option 2",
-    title: "Option 2",
-  },
-  {
-    key: "3",
-    icon: () => h(InboxOutlined),
-    label: "Option 3",
-    title: "Option 3",
-  },
-  {
-    key: "Navigation One",
-    icon: () => h(MailOutlined),
-    label: "Navigation One",
-    title: "Navigation One",
-    children: [
-      {
-        key: "4",
-        label: "Option 4",
-        title: "Option 4",
-      },
-      {
-        key: "5",
-        label: "Option 5",
-        title: "Option 5",
-      },
-      {
-        key: "6",
-        label: "Option 6",
-        title: "Option 6",
-      },
-      {
-        key: "7",
-        label: "Option 7",
-        title: "Option 7",
-      },
-    ],
-  },
-  {
-    key: "Setting",
-    icon: () => h(ToolFilled),
-    label: "Setting",
-    title: "Setting",
-    children: [
-      {
-        key: "8",
-        label: "商品管理",
-        title: "page1",
-      },
-      {
-        key: "9",
-        label: "其他配置",
-        title: "page2",
-      },
-    ],
-  }, */
-
-]);
-
-
-  items=store.state.menu
-
+let items = reactive([]);
+items = store.state.menu;
 
 // 配置
 
@@ -203,12 +131,10 @@ const itemLabel = ref(items[0].label);
 watch(
   () => store.state.tagName,
   (newVal, oldVal) => {
-  console.log("tagname变了:", newVal); 
     items.forEach((item) => {
       if (item.title === newVal) {
         state.selectedKeys = [item.key];
       } else if (item.children) {
-        /* 这里的item.children是传自身值用的 */
         item.children.forEach((child) => {
           if (child.title === newVal) {
             state.selectedKeys = [child.key];
@@ -226,7 +152,6 @@ watch(
 watch(
   () => state.selectedKeys,
   (newVal, oldVal) => {
-  
     items.forEach((item) => {
       if (item.key === newVal[0]) {
         store.state.itemMainTitle = item.label;
@@ -258,7 +183,7 @@ watch(
 
 // 关闭标签
 const delTager = (value) => {
- /*  console.log("deltaggg", value); */
+  /*  console.log("deltaggg", value); */
   // 如果关闭的是home标签，就不执行
   if (value === "home") {
     return;
@@ -296,29 +221,25 @@ const delTager = (value) => {
 
 // 点击菜单后执行的路由操作
 const clickHandler = (item) => {
-  /*  router.push(event.key); */
+  console.log(item);
   //dom更新完后再执行，否则会在异步执行前获得老值，造成新值变老值的情况
   nextTick(() => {
     store.state.item = item;
     console.log(item.item.title);
-     /*  console.log(item);  */
     store.state.itemTitle = item.item.title;
     store.state.itemMainTitle = item.item.title;
 
     if (item.keyPath.length > 1) {
       store.state.hasChild = true;
-      /*  console.log(item.keyPath); */
       store.state.itemMainTitle = item.keyPath[0];
       store.state.itemSubTitle = item.item.originItemValue.label;
-      /*  console.log('有子元素'); */
     } else {
       store.state.hasChild = false;
-      /*  console.log('没有子元素'); */
     }
 
     // 如果点击的是首页，就不执行跳转
     if (item.item.title != "用户管理") {
-      //  需要去掉item.item.title里的空格
+      //  需要替换item.item.title里的空格
       let routerName = item.item.title.replace(" ", "-");
       router.push(`/${routerName}`);
     } else {
@@ -326,8 +247,6 @@ const clickHandler = (item) => {
     }
   });
 };
-
-
 </script>
 
 <style scoped>
@@ -366,6 +285,4 @@ const clickHandler = (item) => {
   margin-left: 8px;
   transform: scale(1.8);
 }
-
-
 </style>

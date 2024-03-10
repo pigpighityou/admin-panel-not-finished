@@ -2,7 +2,7 @@
   <a-dropdown class="avatar">
     <a class="ant-dropdown-link" @click.prevent>
       <el-avatar class="avatar" @click="avatarHandler">
-        <img src="@/assets/images/girl.jpeg" alt="" />
+        <img src="@/assets/images/tomjerry.png" alt="" />
       </el-avatar>
     </a>
     <template #overlay>

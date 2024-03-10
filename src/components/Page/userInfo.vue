@@ -1,16 +1,18 @@
 <template>
-<el-row class="home" :gutter="20">
+  <el-row class="home" :gutter="20" style="height: 80vh; overflow: scroll">
     <el-col :span="8" style="margin-top: 20px">
       <el-card shadow="hover">
         <div class="user">
-          <img src="../../assets/images/girl.jpeg" alt="" />
+          <img src="../../assets/images/tomjerry.png" alt="" />
           <div class="user-info">
             <p class="name">Admin</p>
             <p class="role">超级管理员</p>
           </div>
         </div>
         <div class="login-info">
-          <p>上次登录时间:<span> {{ getTime }}</span></p>
+          <p>
+            上次登录时间:<span> {{ getTime }}</span>
+          </p>
           <p>上次登录的地点:<span>北京</span></p>
         </div>
       </el-card>
@@ -62,17 +64,23 @@
 <script setup>
 import axios from "axios";
 import * as echarts from "echarts";
-import { reactive, ref, onMounted, inject, watch,nextTick,computed } from "vue";
+import {
+  reactive,
+  ref,
+  onMounted,
+  inject,
+  watch,
+  nextTick,
+  computed,
+} from "vue";
 import storageUtils from "@/utils/localStorage";
 
-
 // 获取上次登录时间
-const getTime=computed(()=>{
-    return storageUtils.LocalStoreGetter("loginTime")
-})
+const getTime = computed(() => {
+  return storageUtils.LocalStoreGetter("loginTime");
+});
 // 获取全局api
 const proxy = inject("$api");
-
 
 // 获取dom，来装表格
 const echart = ref(null);
@@ -112,7 +120,7 @@ const getCountData = async () => {
   let res = await proxy.getCountData();
 
   countData.value = res;
- /*  console.log(countData.value); */
+  /*  console.log(countData.value); */
 };
 
 onMounted(() => {
@@ -266,63 +274,62 @@ let videoData = reactive({
 }; */
 
 const getChartData = async () => {
-      let result = await proxy.getChartData();
-      // console.log(result);
-      let res = result.orderData;
-      let userRes = result.userData;
-      let videoRes = result.videoData;
-      orderData.xData = res.date;
-      const keyArray = Object.keys(res.data[0]);
-      const series = [];
-      keyArray.forEach((key) => {
-        series.push({
-          name: key,
-          data: res.data.map((item) => item[key]),
-          type: "line",
-        });
-      });
-      orderData.series = series;
-      xOptions.xAxis.data = orderData.xData;
-      xOptions.series = orderData.series;
-      // userData进行渲染
-      let hEcharts = echarts.init(echart.value);
-      hEcharts.setOption(xOptions);
+  let result = await proxy.getChartData();
+  let res = result.orderData;
+  let userRes = result.userData;
+  let videoRes = result.videoData;
+  orderData.xData = res.date;
+  const keyArray = Object.keys(res.data[0]);
+  const series = [];
+  keyArray.forEach((key) => {
+    series.push({
+      name: key,
+      data: res.data.map((item) => item[key]),
+      type: "line",
+    });
+  });
+  orderData.series = series;
+  xOptions.xAxis.data = orderData.xData;
+  xOptions.series = orderData.series;
+  // userData进行渲染
+  let hEcharts = echarts.init(echart.value);
+  hEcharts.setOption(xOptions);
 
-      // 柱状图进行渲染的过程
-      userData.xData = userRes.map((item) => item.date);
-      userData.series = [
-        {
-          name: "新增用户",
-          data: userRes.map((item) => item.new),
-          type: "bar",
-        },
-        {
-          name: "活跃用户",
-          data: userRes.map((item) => item.active),
-          type: "bar",
-        },
-      ];
+  // 柱状图进行渲染的过程
+  userData.xData = userRes.map((item) => item.date);
+  userData.series = [
+    {
+      name: "新增用户",
+      data: userRes.map((item) => item.new),
+      type: "bar",
+    },
+    {
+      name: "活跃用户",
+      data: userRes.map((item) => item.active),
+      type: "bar",
+    },
+  ];
 
-      xOptions.xAxis.data = userData.xData;
-      xOptions.series = userData.series;
-      let uEcharts = echarts.init(userchart.value);
-      uEcharts.setOption(xOptions);
-      videoData.series = [
-        {
-          data: videoRes,
-          type: "pie",
-        },
-      ];
-      pieOptions.series = videoData.series;
-      let vEcharts = echarts.init(videochart.value);
-      vEcharts.setOption(pieOptions);
-    };
-
-
-
+  xOptions.xAxis.data = userData.xData;
+  xOptions.series = userData.series;
+  let uEcharts = echarts.init(userchart.value);
+  uEcharts.setOption(xOptions);
+  videoData.series = [
+    {
+      data: videoRes,
+      type: "pie",
+    },
+  ];
+  pieOptions.series = videoData.series;
+  let vEcharts = echarts.init(videochart.value);
+  vEcharts.setOption(pieOptions);
+};
 </script>
 
 <style scoped>
+body {
+  overflow: auto;
+}
 .user {
   display: flex;
   align-items: center;
@@ -389,7 +396,7 @@ const getChartData = async () => {
 }
 
 .num .graph {
-    margin-top: 20px;
+  margin-top: 20px;
   display: flex;
   justify-content: space-between;
 }
