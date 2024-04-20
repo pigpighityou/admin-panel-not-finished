@@ -15,6 +15,7 @@
         mode="inline"
         theme="dark"
         :inline-collapsed="state.collapsed"
+        :inlineIndent="20"
         :items="items"
         @click="clickHandler"
       ></a-menu>
@@ -125,7 +126,7 @@ items = store.state.menu;
 // 配置
 
 // 初始化itemLabel的值
-const itemLabel = ref(items[0].label);
+/* const itemLabel = ref(items[0].label); */
 
 // 监听tagname的变化，改变selectedKeys的值
 watch(
@@ -285,4 +286,6 @@ const clickHandler = (item) => {
   margin-left: 8px;
   transform: scale(1.8);
 }
+
+
 </style>
