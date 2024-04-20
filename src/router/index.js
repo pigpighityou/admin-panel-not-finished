@@ -31,20 +31,7 @@ const routes = [
               default: () => import("@/pages/Page/page2.vue"),
             },
           },
-          {
-            path: "/category",
-            name: "Category",
-            components: {
-              default: () => import("@/Manager/category.vue"),
-            },
-          },
-          {
-            path: "/other",
-            name: "Other",
-            components: {
-              default: () => import("@/Manager/other.vue"),
-            },
-          },
+          
 
           /*
            *
